@@ -1,1 +1,10 @@
-
+- nom : BUILD PSEUDOWIRE ETH-ETH XML DATA
+  modèle :
+    src : pseudowire_eth_eth.j2
+    dest : " {{configs_dir}} / {{inventaire_hôte}} / pseudowire_eth_eth.xml "
+- nom : PUSH NETCONF TO REMOTES
+  netconf_config :
+    hôte : " {{ansible_host}} "
+    nom d'utilisateur : " {{ansible_user}} "
+    mot de passe : " {{ansible_ssh_pass}} "
+    src : " {{configs_dir}} / {{inventaire_hôte}} / pseudowire_eth_eth.xml "
