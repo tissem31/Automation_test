@@ -1,0 +1,104 @@
+---
+interfaces:
+  - type: GigabitEthernet
+    name: 2
+    description: connected to P3
+    ipv4: 10.255.254.30
+    ipv4_mask: 255.255.255.252
+    mpls: true
+    enabled: true
+  - type: GigabitEthernet
+    name: 3
+    description: connected to P2
+    ipv4: 10.255.254.22
+    ipv4_mask: 255.255.255.252
+    mpls: true
+    enabled: true
+  - type: Loopback
+    name: 0
+    description: Loopback0
+    ipv4: 10.255.255.12
+    ipv4_mask: 255.255.255.255
+    mpls: true
+
+   
+
+vrfs:
+  - name: ONE
+    rd: 10.255.255.21:1
+    target-export: 10.255.255.20:1
+    target-import: 10.255.255.21:1
+  - name: TWO
+    rd: 10.255.255.31:2
+    target-export: 10.255.255.30:2
+    target-import: 10.255.255.31:2
+
+interface_fors:
+  - name: 5
+    forwarding: ONE
+    ipadd: 10.255.11.1
+    mask: 255.255.255.252
+    enabled: true
+  - name: 6
+    forwarding: TWO
+    ipadd: 10.255.21.1
+    mask: 255.255.255.252
+
+
+ospfs:
+  - id: 2
+    vrf: ONE
+    bgp-as: 64512
+    network: 10.255.10.0
+    mask: 0.0.0.3
+    area: 2    
+
+
+eigrps:
+  - id: 200
+    vrf: TWO
+    eigrp-as: 200
+    bgp-as: 64512
+    network: 10.255.21.0
+    mask: 0.0.0.3
+
+neighbors_bgp:
+  - id: 10.255.255.11
+    as: 64512
+    loopback: 0
+  - id: 10.255.255.13
+    as: 64512
+    loopback: 0
+  - id: 10.255.255.14
+    as: 64512
+    loopback: 0
+
+
+customers:
+  - name: ONE
+    redistribute: ospf
+    ospf-id: 2
+  - name: TWO
+    redistribute: eigrp
+    eigrp-id: 200    
+
+routing_core:
+  - name: ospf
+    id: 1
+    router-id: 10.255.255.12
+  - network: 
+    ip: 10.255.254.20
+    mask: 0.0.0.3
+    area: 0
+  - network: 
+    ip: 10.255.254.28
+    mask: 0.0.0.3
+    area: 0
+  - network: 
+    ip: 10.255.255.12
+    mask: 0.0.0.3
+    area: 0
+  - network: 
+    ip: 10.255.255.28
+    mask: 0.0.0.3
+    area: 0  

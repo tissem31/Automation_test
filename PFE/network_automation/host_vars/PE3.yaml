@@ -1,0 +1,52 @@
+---
+interfaces:
+  - type: GigabitEthernet
+    name: 2
+    description: connected to P2
+    ipv4: 10.255.254.26
+    ipv4_mask: 255.255.255.252
+    mpls: true
+    enabled: true
+  - type: Loopback
+    name: 0
+    description: Loopback0
+    ipv4: 10.255.255.13
+    ipv4_mask: 255.255.255.255
+    mpls: true
+
+neighbors_bgp:
+  - id: 10.255.255.11
+    as: 64512
+    loopback: 0
+  - id: 10.255.255.12
+    as: 64512
+    loopback: 0
+  - id: 10.255.255.14
+    as: 64512
+    loopback: 0
+
+routing_core:
+  - name: ospf
+    id: 1
+    router-id: 10.255.255.13
+  - network: 
+    ip: 10.255.254.24
+    mask: 0.0.0.3
+    area: 0
+  - network: 
+    ip: 10.255.255.13
+    mask: 0.0.0.3
+    area: 0
+
+pseudowire:
+  name: ETH-TO-ETH
+  encapsulation: mpls
+  interface: 3
+  ip-address: 10.255.255.14
+  vcid: 34
+
+
+vpls:
+  interface: 4
+  vcid: 101
+  enabled: "true"
